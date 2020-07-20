@@ -1,4 +1,4 @@
-name: .NET Core
+name: build
 
 on:
   push:
@@ -26,6 +26,7 @@ jobs:
       run: dotnet test --no-restore --verbosity normal
       
   deploy:
+    needs: [build]
     runs-on: ubuntu-latest
     
     steps:
