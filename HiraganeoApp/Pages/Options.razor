@@ -1,0 +1,48 @@
+﻿@page "/options"
+@using HiraganeoCore
+<h1>Options</h1>
+
+<ul>
+    @foreach (var part in (Hiraganeo.HiraganaParts[])Enum.GetValues(typeof(Hiraganeo.HiraganaParts)))
+    {
+        <MatCheckbox Value="@(Hiraganeo.EnabledSyllables[part])" TValue="bool" ValueChanged="(e) => ToggleHiraganaPart(part, e)">@part</MatCheckbox>
+        <br />
+    }
+</ul>
+
+<MatButton Unelevated="true" @onclick="(e) => ToggleHiraganaParts(true)">Select all</MatButton>
+<MatButton Unelevated="true" @onclick="(e) => ToggleHiraganaParts(false)">Select none</MatButton>
+
+@code {
+    private int currentCount = 0;
+
+    private void IncrementCount()
+    {
+        currentCount++;
+    }
+
+    public decimal Val2
+    {
+        get => _val2;
+        set
+        {
+            _val2 = value;
+            this.StateHasChanged();
+        }
+    }
+
+    private decimal _val2 = 0;
+
+    private void ToggleHiraganaPart(Hiraganeo.HiraganaParts part, bool value)
+    {
+        Hiraganeo.EnabledSyllables[part] ^= true;
+    }
+
+    private void ToggleHiraganaParts(bool value)
+    {
+        foreach (var part in (Hiraganeo.HiraganaParts[])Enum.GetValues(typeof(Hiraganeo.HiraganaParts)))
+        {
+            Hiraganeo.EnabledSyllables[part] = value;
+        }
+    }
+}
