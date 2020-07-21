@@ -4,27 +4,29 @@ on:
   workflow_dispatch:
 
 jobs:
-  deploy:
+  checkout:
 
     runs-on: ubuntu-latest
 
     steps:
-    - name: checkout
+    - name: Checkout
       uses: actions/checkout@v2
       with:
         ref: "master"
-    - name: pack
-      run: |
-        cd $GITHUB_WORKSPACE
-        ls -la
-        tar -czvf hiraganeo.tar.gz .
-        ls -la
-    - name: upload
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301
+    - name: Install dependencies
+      run: dotnet restore
+    - name: Publish
+      run: dotnet publish HiraganeoApp --configuration Release -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true --no-build
+    - name: Upload
       uses: actions/upload-artifact@v2
       with:
         name: "hiraganeo"
-        path: hiraganeo.tar.gz
-    - name: deploy
+        path: HiraganeoApp/bin/Release/netcoreapp3.1/linux-x64/publish
+    - name: Deploy
       env:
         SSH_HOST: axonited.net
         SSH_USER: ${{ secrets.USER }}
