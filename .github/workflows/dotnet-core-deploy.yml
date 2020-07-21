@@ -14,4 +14,10 @@ jobs:
         SSH_HOST: axonited.net
         SSH_USER: ${{ secrets.USER }}
         SSH_PASS: ${{ secrets.PASSWORD }}
-      run: echo "connecting to $SSH_HOST with user $SSH_USER and password $SSH_PASSWORD"
+      run: |
+        cd /tmp
+        mkdir hiraganeo
+        cd hiraganeo
+        git checkout $GITHUB_SHA .
+        ls -la
+        
