@@ -9,6 +9,21 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+    - name: checkout
+      uses: actions/checkout@v2
+      with:
+        ref: $GITHUB_REF
+    - name: pack
+      run: |
+        cd $GITHUB_WORKSPACE
+        ls -la
+        tar -czvf hiraganeo.tar.gz .
+        ls -la
+    - name: upload
+    - uses: actions/upload-artifact@v2
+      with:
+        name: "hiraganeo"
+        path: hiraganeo.tar.gz
     - name: deploy
       env:
         SSH_HOST: axonited.net
@@ -16,7 +31,7 @@ jobs:
         SSH_PASS: ${{ secrets.PASSWORD }}
       run: |
         echo "starting"
+        cd $GITHUB_WORKSPACE
         ls -la
-        git checkout $GITHUB_SHA        
-        ls -la
+        echo "server copy here"
         echo "finished"       
