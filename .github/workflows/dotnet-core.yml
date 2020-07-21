@@ -24,11 +24,3 @@ jobs:
       run: dotnet build --configuration Release --no-restore
     - name: Test
       run: dotnet test --no-restore --verbosity normal
-      
-  deploy:
-    needs: [build]
-    runs-on: ubuntu-latest
-    
-    steps:
-    - name: Deploy
-      run: echo "deploy"
