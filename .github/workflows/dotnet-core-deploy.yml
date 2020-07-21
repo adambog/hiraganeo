@@ -15,8 +15,8 @@ jobs:
         SSH_USER: ${{ secrets.USER }}
         SSH_PASS: ${{ secrets.PASSWORD }}
       run: |
-        cd /tmp
-        mkdir hiraganeo
-        cd hiraganeo        
+        echo "starting"
+        ls -la
+        git checkout $GITHUB_SHA        
         ls -la
         echo "finished"       
