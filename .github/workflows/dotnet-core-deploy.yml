@@ -20,7 +20,7 @@ jobs:
         tar -czvf hiraganeo.tar.gz .
         ls -la
     - name: upload
-    - uses: actions/upload-artifact@v2
+      uses: actions/upload-artifact@v2
       with:
         name: "hiraganeo"
         path: hiraganeo.tar.gz
