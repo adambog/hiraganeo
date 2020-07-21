@@ -12,7 +12,7 @@ jobs:
     - name: checkout
       uses: actions/checkout@v2
       with:
-        ref: $GITHUB_REF
+        ref: "master"
     - name: pack
       run: |
         cd $GITHUB_WORKSPACE
