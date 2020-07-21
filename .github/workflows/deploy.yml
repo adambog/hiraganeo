@@ -1,0 +1,18 @@
+name: deploy
+
+on:
+  workflow_dispatch:
+
+jobs:
+  deploy:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: deploy
+    - env:
+        SSH_HOST: axonited.net
+        SSH_USER: ${{ secrets.USER }}
+        SSH_PASS: ${{ secrets.PASSWORD }}
+    - run: echo "connecting to $SSH_HOST with user $SSH_USER and password $SSH_PASSWORD"
+        
