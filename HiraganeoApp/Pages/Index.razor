@@ -1,5 +1,7 @@
 ﻿@page "/"
 
+@using HiraganeoCore;
+
 <p>
     <h1>こんにちは! Welcome to Hiraganeo!</h1>
 </p>
@@ -8,15 +10,54 @@
     <h3>How Hiraganeo works?</h3>
     Hiraganeo generates 250 syllabels in romaji from selected options. Generated text doesn't make sense byt let's you practice writing hiragana without searching for words composed from syllabels you know (for example only from A/I/U/E/O and KA/KI/KU/KE/KO
 </p>
-
 <p>
     <h3>How to use Hiraganeo:</h3>
-    <ul>
-        <li>
-            Select syllabels under <NavLink href="options">options</NavLink>
-        </li>
-        <li>
-            Practice your hiragana writing skills under <NavLink href="practice">practice</NavLink>
-        </li>
-    </ul>
+    <p>Select syllabels:</p>
+    <p>
+        @foreach (var part in (Hiraganeo.HiraganaParts[])Enum.GetValues(typeof(Hiraganeo.HiraganaParts)))
+        {
+            <MatCheckbox Value="@(Hiraganeo.EnabledSyllables[part])" TValue="bool" ValueChanged="(e) => ToggleHiraganaPart(part, e)">@part</MatCheckbox>       
+        }
+        <br />
+
+        <MatButton Unelevated="true" @onclick="(e) => ToggleHiraganaParts(true)">Select all</MatButton>
+        <MatButton Unelevated="true" @onclick="(e) => ToggleHiraganaParts(false)">Select none</MatButton>
+    </p>
+    <p>Practice:</p>
+    <p>
+        <MatButton Unelevated="true" @onclick="(e) => { PracticeText = Hiraganeo.GenerateText(Hiraganeo.HiraganaBasic.Concat(Hiraganeo.HiraganaVoiced)); }">Generate</MatButton>
+        <br />
+
+        @if (@PracticeText != String.Empty)
+        {
+            @PracticeText
+        }
+    </p>
 </p>
+
+@code {
+
+    private string practiceText = String.Empty;
+    public string PracticeText
+    {
+        get { return practiceText; }
+        set
+        {
+            practiceText = value;
+            this.StateHasChanged();
+        }
+    }
+
+    private void ToggleHiraganaPart(Hiraganeo.HiraganaParts part, bool value)
+    {
+        Hiraganeo.EnabledSyllables[part] ^= true;
+    }
+
+    private void ToggleHiraganaParts(bool value)
+    {
+        foreach (var part in (Hiraganeo.HiraganaParts[])Enum.GetValues(typeof(Hiraganeo.HiraganaParts)))
+        {
+            Hiraganeo.EnabledSyllables[part] = value;
+        }
+    }
+}
