@@ -4,23 +4,23 @@ on:
   workflow_dispatch:
 
 jobs:
-  checkout:
+  deploy:
 
     runs-on: ubuntu-latest
 
     steps:    
-    - name: Setup .NET Core
-      uses: actions/setup-dotnet@v1
-      with:
-        dotnet-version: 3.1.301
     - name: Checkout
       uses: actions/checkout@v2
       with:
         ref: "master"
+    - name: Setup .NET Core
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 3.1.301    
     - name: Install dependencies
       run: dotnet restore
     - name: Publish
-      run: dotnet publish HiraganeoApp --configuration Release -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true --no-build
+      run: dotnet publish HiraganeoApp --configuration Release -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true --no-build -p:RuntimeIdentifier=linux-x64
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
