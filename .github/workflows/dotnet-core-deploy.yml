@@ -8,15 +8,15 @@ jobs:
 
     runs-on: ubuntu-latest
 
-    steps:
-    - name: Checkout
-      uses: actions/checkout@v2
-      with:
-        ref: "master"
+    steps:    
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+    - name: Checkout
+      uses: actions/checkout@v2
+      with:
+        ref: "master"
     - name: Install dependencies
       run: dotnet restore
     - name: Publish
