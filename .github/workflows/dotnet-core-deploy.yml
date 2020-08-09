@@ -30,6 +30,7 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         source: "./publish/*"
         target: "sites/hiraganeo.axonited.net/new_release"
+        strip_components: 1
     - name: Deploy
       uses: appleboy/ssh-action@master
       with:
@@ -38,4 +39,8 @@ jobs:
         key: ${{ secrets.SSH_KEY }}
         port: ${{ secrets.SSH_PORT }}
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
-        script: ls -la ~/sites/hiraganeo.axonited.net/new_release
+        script: |
+          sudo systemctl stop hiraganeo
+          cp -rlf ~/sites/hiraganeo.axonited.net/new_release/* ~/sites/hiraganeo.axonited.net
+          rm -Rf ~/sites/hiraganeo.axonited.net/new_release
+          sudo systemctl start hiraganeo
