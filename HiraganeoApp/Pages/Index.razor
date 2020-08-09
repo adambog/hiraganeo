@@ -29,14 +29,16 @@
             <p>
                 @PracticeText
             </p>
+
+            @if (showHintText)
+            {
+                <p>
+                    @((MarkupString)HintText)
+                </p>
+            }
+            <MatButton Icon="help_outline" Unelevated="true" @onclick="(e) => showHintText = !showHintText">@(showHintText? "Hide hint" : "Show hint")</MatButton>
         }
-        @if (@HintText != String.Empty)
-        {
-            <p>
-                @((MarkupString)HintText)
-            </p>
-        }
-    
+
     </p>
 </div>
 
@@ -44,6 +46,7 @@
 
     private string practiceText = String.Empty;
     private string hintText = String.Empty;
+    private bool showHintText = false;
 
     public string HintText
     {
