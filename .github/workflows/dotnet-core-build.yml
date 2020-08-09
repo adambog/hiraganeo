@@ -2,7 +2,6 @@ name: Build app
 
 on:
   push:
-    branches: [ master ]
   pull_request:
     branches: [ master ]
   workflow_dispatch:
@@ -18,6 +17,8 @@ jobs:
       uses: actions/setup-dotnet@v1
       with:
         dotnet-version: 3.1.301
+      env: 
+        DOTNET_CLI_TELEMETRY_OPTOUT : 1
     - name: Install dependencies
       run: dotnet restore
     - name: Build
