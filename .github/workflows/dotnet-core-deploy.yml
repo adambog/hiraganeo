@@ -2,8 +2,9 @@ name: Deploy app
 
 on:
   workflow_dispatch:
-  pull_request:
-    branches: [ master ]
+  push:
+    branches: 
+      - master
 
 jobs:
   publish-and-deploy:
