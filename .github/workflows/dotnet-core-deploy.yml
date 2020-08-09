@@ -37,13 +37,11 @@ jobs:
         name: "hiraganeo"
         path: .
     - name: Deploy
-      env:
-        SSH_HOST: ${{ secrets.HOST }}
-        SSH_USER: ${{ secrets.USER }}
-        SSH_PASS: ${{ secrets.PASSWORD }}
-      run: 
-        |
-        echo "starting"
-        ls -la        
-        echo "server copy here"
-        echo "finished"       
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.SSH_HOST }}
+        username: ${{ secrets.SSH_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        port: ${{ secrets.SSH_PORT }}
+        passphrase: ${{ secrets.SSH_PASSPHRASE }}
+        script: whoami
