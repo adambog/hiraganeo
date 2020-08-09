@@ -20,7 +20,7 @@ jobs:
       run: dotnet restore
     - name: Publish
       run: dotnet publish HiraganeoApp --configuration Release -f netcoreapp3.1 -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -o ./publish
-    - name: copy file via ssh key
+    - name: Copy files to server
       uses: appleboy/scp-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -31,7 +31,7 @@ jobs:
         source: "./publish/*"
         target: "sites/hiraganeo.axonited.net/new_release"
         strip_components: 1
-    - name: Deploy
+    - name: Prepare release & restart services
       uses: appleboy/ssh-action@master
       with:
         host: ${{ secrets.SSH_HOST }}
@@ -41,6 +41,6 @@ jobs:
         passphrase: ${{ secrets.SSH_PASSPHRASE }}
         script: |
           sudo systemctl stop hiraganeo
-          cp -rlf ~/sites/hiraganeo.axonited.net/new_release/* ~/sites/hiraganeo.axonited.net
+          cp -rf ~/sites/hiraganeo.axonited.net/new_release/* ~/sites/hiraganeo.axonited.net
           rm -Rf ~/sites/hiraganeo.axonited.net/new_release
           sudo systemctl start hiraganeo
