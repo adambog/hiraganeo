@@ -1,15 +1,23 @@
 ﻿@inherits LayoutComponentBase
 
-<div class="sidebar">
-    <NavMenu />
-</div>
+    <MatThemeProvider Theme="@theme1">
+        <div class="main">
+            <div class="top-row px-4">
+                <span class="app-title">こんにちは! Welcome to Hiraganeo!</span>
+                <a href="https://adambogacz.net" target="_blank">Made with ❤️</a>
+            </div>
 
-<div class="main">
-    <div class="top-row px-4">
-        <a href="https://adambogacz.net" target="_blank">Made with ❤️</a>
-    </div>
+            <div class="content px-4">
+                @Body
+            </div>
+        </div>
+    </MatThemeProvider>
 
-    <div class="content px-4">
-        @Body
-    </div>
-</div>
+@code {
+    MatTheme theme1 = new MatTheme()
+    {
+        Primary = MatThemeColors.Red._700.Value,
+        Secondary = MatThemeColors.Red._700.Value,
+        Surface = MatThemeColors.Red._900.Value
+    };
+} 

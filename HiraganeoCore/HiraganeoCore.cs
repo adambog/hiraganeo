@@ -109,5 +109,42 @@ namespace HiraganeoCore
 
             return output.ToString();
         }
+
+        public static (string, string) GenerateTextWithHint(IEnumerable<HiraganaParts> hiraganaSet)
+        {
+            StringBuilder output = new StringBuilder();
+            StringBuilder hint = new StringBuilder();
+
+            Random rnd = new Random((int)DateTime.Now.Ticks);
+
+            var maxSyllabsInWord = 4;
+            var syllabsInWord = 0;
+
+            var selectedSyllabels1 = Hiragana.Where(entry => EnabledSyllables[entry.Key] == true && hiraganaSet.Contains(entry.Key)).SelectMany(pair => pair.Value).Select(pair => pair.Key);
+            var selectedSyllabels = Hiragana.Where(entry => EnabledSyllables[entry.Key] == true && hiraganaSet.Contains(entry.Key)).SelectMany(pair => pair.Value);
+
+            if (selectedSyllabels.Count() == 0)
+            {
+                return (output.ToString(), hint.ToString());
+            }
+
+            for (int i = 0; i < 256; i++)
+            {
+                var sylab = selectedSyllabels.ElementAt(rnd.Next(0, selectedSyllabels.Count() - 1));
+
+                output.Append(sylab.Key);
+                hint.Append(sylab.Value);
+                syllabsInWord++;
+
+                if (rnd.Next(0, 4) % 4 == 0 || syllabsInWord >= maxSyllabsInWord)
+                {                    
+                    output.Append(' ');
+                    hint.Append("&nbsp;&nbsp;&nbsp;&nbsp;");
+                    syllabsInWord = 0;
+                }
+            }
+
+            return (output.ToString(), hint.ToString());
+        }
     }
 }
