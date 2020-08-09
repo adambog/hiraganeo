@@ -1,14 +1,13 @@
-name: deploy
+name: Deploy app
 
 on:
   workflow_dispatch:
 
 jobs:
-  checkout:
-
+  publish:
     runs-on: ubuntu-latest
 
-    steps:
+    steps:    
     - name: Checkout
       uses: actions/checkout@v2
       with:
@@ -16,24 +15,35 @@ jobs:
     - name: Setup .NET Core
       uses: actions/setup-dotnet@v1
       with:
-        dotnet-version: 3.1.301
+        dotnet-version: 3.1.301    
     - name: Install dependencies
       run: dotnet restore
     - name: Publish
-      run: dotnet publish HiraganeoApp --configuration Release -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true --no-build
+      run: dotnet publish HiraganeoApp --configuration Release -f netcoreapp3.1 -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -o ./publish -v normal
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
         name: "hiraganeo"
-        path: HiraganeoApp/bin/Release/netcoreapp3.1/linux-x64/publish
+        path: ./publish
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: publish
+
+    steps:
+    - name: Download
+      uses: actions/download-artifact@v2
+      with:        
+        name: "hiraganeo"
+        path: .
     - name: Deploy
       env:
-        SSH_HOST: axonited.net
+        SSH_HOST: ${{ secrets.HOST }}
         SSH_USER: ${{ secrets.USER }}
         SSH_PASS: ${{ secrets.PASSWORD }}
-      run: |
+      run: 
+        |
         echo "starting"
-        cd $GITHUB_WORKSPACE
-        ls -la
+        ls -la        
         echo "server copy here"
         echo "finished"       
