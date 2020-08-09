@@ -1,11 +1,10 @@
-name: deploy
+name: Deploy app
 
 on:
   workflow_dispatch:
 
 jobs:
-  deploy:
-
+  publish:
     runs-on: ubuntu-latest
 
     steps:    
@@ -26,14 +25,25 @@ jobs:
       with:
         name: "hiraganeo"
         path: ./publish
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: publish
+
+    steps:
+    - name: Download
+      uses: actions/download-artifact@v2
+      with:        
+        name: "hiraganeo"
+        path: .
     - name: Deploy
       env:
-        SSH_HOST: axonited.net
+        SSH_HOST: ${{ secrets.HOST }}
         SSH_USER: ${{ secrets.USER }}
         SSH_PASS: ${{ secrets.PASSWORD }}
-      run: |
+      run: 
+        |
         echo "starting"
-        cd $GITHUB_WORKSPACE
-        ls -la
+        ls -la        
         echo "server copy here"
         echo "finished"       
