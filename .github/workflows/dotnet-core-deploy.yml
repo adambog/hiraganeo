@@ -20,12 +20,12 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Publish
-      run: dotnet publish HiraganeoApp --configuration Release -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true --no-build -p:RuntimeIdentifier=linux-x64
+      run: dotnet publish HiraganeoApp --configuration Release -f netcoreapp3.1 -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true --no-build -o ./publish -v normal
     - name: Upload
       uses: actions/upload-artifact@v2
       with:
         name: "hiraganeo"
-        path: HiraganeoApp/bin/Release/netcoreapp3.1/linux-x64/publish
+        path: ./publish
     - name: Deploy
       env:
         SSH_HOST: axonited.net
