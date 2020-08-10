@@ -9,7 +9,7 @@
 <div>
     <h3>Select syllabels:</h3>
     <p>
-        <div style="display: flex; width: 400px">
+        <div>
             @foreach (var part in (Hiraganeo.HiraganaParts[])Enum.GetValues(typeof(Hiraganeo.HiraganaParts)))
             {
                 <MatCheckbox Value="@(Hiraganeo.EnabledSyllables[part])" TValue="bool" ValueChanged="(e) => ToggleHiraganaPart(part, e)">@part</MatCheckbox>}
