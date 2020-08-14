@@ -7,6 +7,11 @@ namespace HiraganeoCore
 {
     public class Hiraganeo
     {
+        public enum Syllabaries
+        {
+            Hiragana,
+            Katagana
+        }
         public enum HiraganaParts
         {
             A, KA, SA, TA, NA, HA, MA, YA, RA, WA, N, GA, ZA, DA, BA, PA
@@ -110,7 +115,7 @@ namespace HiraganeoCore
             return output.ToString();
         }
 
-        public static (string, string) GenerateTextWithHint(IEnumerable<HiraganaParts> hiraganaSet)
+        public static (string, string) GenerateTextWithHint(IEnumerable<HiraganaParts> hiraganaSet, Syllabaries selectedSyllabary = Syllabaries.Hiragana)
         {
             StringBuilder output = new StringBuilder();
             StringBuilder hint = new StringBuilder();
@@ -122,6 +127,12 @@ namespace HiraganeoCore
 
             var selectedSyllabels1 = Hiragana.Where(entry => EnabledSyllables[entry.Key] == true && hiraganaSet.Contains(entry.Key)).SelectMany(pair => pair.Value).Select(pair => pair.Key);
             var selectedSyllabels = Hiragana.Where(entry => EnabledSyllables[entry.Key] == true && hiraganaSet.Contains(entry.Key)).SelectMany(pair => pair.Value);
+
+            if (selectedSyllabary == Syllabaries.Katagana)
+            {
+                output.Append("Not yet implemented!");
+                return (output.ToString(), hint.ToString());
+            }
 
             if (selectedSyllabels.Count() == 0)
             {
