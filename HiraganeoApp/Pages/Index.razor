@@ -3,47 +3,74 @@
 @using HiraganeoCore;
 
 <div>
-    <h3>How Hiraganeo works?</h3>
-    Hiraganeo generates 250 syllabels in romaji from selected options. Generated text doesn't make sense byt let's you practice writing hiragana without searching for words composed from syllabels you know (for example only from A/I/U/E/O and KA/KI/KU/KE/KO
-</div>
-<div>
-    <h3>Select syllabels:</h3>
-    <p>
+    <div class="hiraganeo-box">
+        <h3>How Hiraganeo works?</h3>
+        <MatDivider></MatDivider>
+        Hiraganeo generates 250 syllabels in romaji from selected options. Generated text doesn't make sense byt let's you practice writing hiragana without searching for words composed from syllabels you know (for example only from A/I/U/E/O and KA/KI/KU/KE/KO
+    </div>
+    <div class="hiraganeo-box">
+        <h3>Select syllabels:</h3>
+        <MatDivider></MatDivider>
         <div>
             @foreach (var part in (Hiraganeo.HiraganaParts[])Enum.GetValues(typeof(Hiraganeo.HiraganaParts)))
             {
-                <MatCheckbox Value="@(Hiraganeo.EnabledSyllables[part])" TValue="bool" ValueChanged="(e) => ToggleHiraganaPart(part, e)">@part</MatCheckbox>}
+                <MatCheckbox Value="@(Hiraganeo.EnabledSyllables[part])" TValue="bool" ValueChanged="(e) => ToggleHiraganaPart(part, e)">@part</MatCheckbox>
+            }
             <br />
+
+            <MatRadioGroup @bind-Value="@SelectedSyllabary">                
+                    <MatRadioButton Value="Hiraganeo.Syllabaries.Hiragana">@Hiraganeo.Syllabaries.Hiragana</MatRadioButton>
+                    <MatRadioButton Value="Hiraganeo.Syllabaries.Katagana">@Hiraganeo.Syllabaries.Katagana</MatRadioButton>
+            </MatRadioGroup>
         </div>
 
         <MatButton Icon="check_box" Unelevated="true" @onclick="(e) => ToggleHiraganaParts(true)">Select all</MatButton>
         <MatButton Icon="check_box_outline_blank" Unelevated="true" @onclick="(e) => ToggleHiraganaParts(false)">Select none</MatButton>
-    </p>
-    <h3>Practice:</h3>
-    <p>
-        <MatButton Icon="favorite" Unelevated="true" @onclick="GetPracticeData">Practice</MatButton>
-        <br />
+    </div>
+    <div class="hiraganeo-box">
+        <h3>Practice:</h3>
+        <MatDivider></MatDivider>        
+        <p>
+            <MatButton Icon="favorite" Unelevated="true" OnClick="GetPracticeData" Style="margin-top: 10px;">Practice</MatButton>
+            <br />
         
-        @if (@PracticeText != String.Empty)
-        {
-            <p>
-                @PracticeText
-            </p>
-
-            @if (showHintText)
+            @if (@PracticeText != String.Empty)
             {
                 <p>
-                    @((MarkupString)HintText)
+                    @PracticeText
                 </p>
-            }
-            <MatButton Icon="help_outline" Unelevated="true" @onclick="(e) => showHintText = !showHintText">@(showHintText? "Hide hint" : "Show hint")</MatButton>
-        }
 
-    </p>
+                @if (showHintText)
+                {
+                    <p>
+                        @((MarkupString)HintText)
+                    </p>
+                }
+                <MatButton Icon="help_outline" Unelevated="true" @onclick="(e) => showHintText = !showHintText">@(showHintText? "Hide hint" : "Show hint")</MatButton>
+            }
+
+        </p>
+    </div>
 </div>
 
 @code {
+    private Hiraganeo.Syllabaries selectedSyllabary = Hiraganeo.Syllabaries.Hiragana;
 
+    public Hiraganeo.Syllabaries SelectedSyllabary 
+    {
+        get { return selectedSyllabary; }
+        set 
+        { 
+            var oldValue = selectedSyllabary;
+
+            selectedSyllabary = value;
+
+            if (oldValue != selectedSyllabary && practiceText != String.Empty) {
+                GetPracticeData();
+            }
+        }
+    }
+       
     private string practiceText = String.Empty;
     private string hintText = String.Empty;
     private bool showHintText = false;
@@ -68,9 +95,9 @@
         }
     }
 
-    private void GetPracticeData(MouseEventArgs e)
+    private void GetPracticeData()
     {
-        (string, string) practiceText = Hiraganeo.GenerateTextWithHint(Hiraganeo.HiraganaBasic.Concat(Hiraganeo.HiraganaVoiced));
+        (string, string) practiceText = Hiraganeo.GenerateTextWithHint(Hiraganeo.HiraganaBasic.Concat(Hiraganeo.HiraganaVoiced), selectedSyllabary);
         PracticeText = practiceText.Item1;
         HintText = practiceText.Item2;
     }

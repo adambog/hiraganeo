@@ -144,9 +144,17 @@ app {
     top: 0.5rem;
 }
 
+.mdc-form-field > label {
+    padding-top: 8px;
+}
+
+.hiraganeo-box {
+    margin-bottom: 10px;
+}
+
 @media (max-width: 767.98px) {
     .main .top-row:not(.auth) {
-        display: none;
+        /*display: none;*/
     }
 
     .main .top-row.auth {
