@@ -157,6 +157,10 @@ app {
         /*display: none;*/
     }
 
+    .main .top-row .app-title {
+        font-size: medium;
+    }
+
     .main .top-row.auth {
         justify-content: space-between;
     }
