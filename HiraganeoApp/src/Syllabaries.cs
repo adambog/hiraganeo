@@ -20,20 +20,9 @@ namespace HiraganeoApp.Syllabaries
     {
         public static (string, string) GeneratePracticeTextWithHint(Dictionary<SyllabaryParts, bool> selectedParts, SyllabaryType selectedType)
         {
-            StringBuilder output = new StringBuilder();
-            StringBuilder hint = new StringBuilder();
-
-            Random rnd = new Random((int)DateTime.Now.Ticks);
-
-            var maxSyllabsInWord = 4;
-            var syllabsInWord = 0;
-
-            // var selectedSyllabels1 = Hiragana.Syllables.Where(entry => /*EnabledSyllables[entry.Key]*/ true == true && selectedParts.Contains(entry.Key)).SelectMany(pair => pair.Value).Select(pair => pair.Key);
-            // var selectedSyllabels = Hiragana.Syllables.Where(entry => /*EnabledSyllables[entry.Key]*/ true == true && selectedParts.Contains(entry.Key)).SelectMany(pair => pair.Value);
-
+            // source data stuff
             var selectedSyllabels = new List<KeyValuePair<string, string>>();
-
-            Dictionary<SyllabaryParts, Dictionary<string, string>> selectedSyllabary = new Dictionary<SyllabaryParts, Dictionary<string, string>>();
+            var selectedSyllabary = new Dictionary<SyllabaryParts, Dictionary<string, string>>();
 
             switch (selectedType)
             {
@@ -52,8 +41,18 @@ namespace HiraganeoApp.Syllabaries
             
             if (selectedSyllabels.Count() == 0)
             {
-                return (output.ToString(), hint.ToString());
+                return (String.Empty, String.Empty);
             }
+
+            // generated stuff
+
+            StringBuilder output = new StringBuilder();
+            StringBuilder hint = new StringBuilder();
+
+            Random rnd = new Random((int)DateTime.Now.Ticks);
+
+            var maxSyllabsInWord = 4;
+            var syllabsInWord = 0;
 
             for (int i = 0; i < 256; i++)
             {

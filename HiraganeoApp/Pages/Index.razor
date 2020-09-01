@@ -33,7 +33,7 @@
         <h3>Practice:</h3>
         <MatDivider></MatDivider>        
         <p>
-            <MatButton Icon="favorite" Unelevated="true" OnClick="GetPracticeData" Style="margin-top: 10px;">Practice</MatButton>
+            <MatButton Icon="favorite" Unelevated="true" OnClick="GeneratePracticeText" Style="margin-top: 10px;">Practice</MatButton>
             <br />
         
             @if (@PracticeText != String.Empty)
@@ -58,6 +58,9 @@
 @code {
     private Dictionary<SyllabaryParts, bool> selectedParts = new Dictionary<SyllabaryParts, bool>();
     private SyllabaryType selectedSyllabary = SyllabaryType.Hiragana;
+    private string practiceText = String.Empty;
+    private string hintText = String.Empty;
+    private bool showHintText = false;
 
     public SyllabaryType SelectedSyllabary 
     {
@@ -73,10 +76,16 @@
             }
         }
     }
-       
-    private string practiceText = String.Empty;
-    private string hintText = String.Empty;
-    private bool showHintText = false;
+        
+    public string PracticeText
+    {
+        get { return practiceText; }
+        set
+        {
+            practiceText = value;
+            this.StateHasChanged();
+        }
+    }
 
     public string HintText
     {
@@ -88,17 +97,7 @@
         }
     }
 
-    public string PracticeText
-    {
-        get { return practiceText; }
-        set
-        {
-            practiceText = value;
-            this.StateHasChanged();
-        }
-    }
-
-    private void GetPracticeData()
+    private void GeneratePracticeText()
     {        
         (PracticeText, HintText) = Generators.GeneratePracticeTextWithHint(selectedParts, selectedSyllabary);     
     }
