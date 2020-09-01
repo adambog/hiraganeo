@@ -3,3 +3,5 @@
 ![deploy](https://github.com/adambog/hiraganeo/workflows/deploy/badge.svg)
 
 Helper app for learning japanease
+
+Demo: http://hiraganeo.axonited.net
