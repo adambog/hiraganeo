@@ -13,8 +13,4 @@
     <PackageReference Include="MatBlazor" Version="2.6.2" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\HiraganeoCore\HiraganeoCore.csproj" />
-  </ItemGroup>
-
 </Project>
