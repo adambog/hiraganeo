@@ -1,5 +1,8 @@
 ﻿@page "/"
 
+@using System.Text;
+
+@using HiraganeoApp.Syllabaries;
 @using HiraganeoCore;
 
 <div>
@@ -12,20 +15,20 @@
         <h3>Select syllabels:</h3>
         <MatDivider></MatDivider>
         <div>
-            @foreach (var part in (Hiraganeo.HiraganaParts[])Enum.GetValues(typeof(Hiraganeo.HiraganaParts)))
+            @foreach (var part in (SyllabaryParts[])Enum.GetValues(typeof(SyllabaryParts)))
             {
-                <MatCheckbox Value="@(Hiraganeo.EnabledSyllables[part])" TValue="bool" ValueChanged="(e) => ToggleHiraganaPart(part, e)">@part</MatCheckbox>
+                <MatCheckbox Value="@(selectedParts.GetValueOrDefault<SyllabaryParts,bool>(part))" TValue="bool" ValueChanged="(value) => ToggleSelectedPart(part, value)">@part</MatCheckbox>
             }
             <br />
 
             <MatRadioGroup @bind-Value="@SelectedSyllabary">                
-                    <MatRadioButton Value="Hiraganeo.Syllabaries.Hiragana">@Hiraganeo.Syllabaries.Hiragana</MatRadioButton>
-                    <MatRadioButton Value="Hiraganeo.Syllabaries.Katagana">@Hiraganeo.Syllabaries.Katagana</MatRadioButton>
+                    <MatRadioButton Value="SyllabaryType.Hiragana">@SyllabaryType.Hiragana</MatRadioButton>
+                    <MatRadioButton Value="SyllabaryType.Katakana">@SyllabaryType.Katakana</MatRadioButton>
             </MatRadioGroup>
         </div>
 
-        <MatButton Icon="check_box" Unelevated="true" @onclick="(e) => ToggleHiraganaParts(true)">Select all</MatButton>
-        <MatButton Icon="check_box_outline_blank" Unelevated="true" @onclick="(e) => ToggleHiraganaParts(false)">Select none</MatButton>
+        <MatButton Icon="check_box" Unelevated="true" @onclick="(e) => ToggleSelectedParts(true)">Select all</MatButton>
+        <MatButton Icon="check_box_outline_blank" Unelevated="true" @onclick="(e) => ToggleSelectedParts(false)">Select none</MatButton>
     </div>
     <div class="hiraganeo-box">
         <h3>Practice:</h3>
@@ -54,9 +57,10 @@
 </div>
 
 @code {
-    private Hiraganeo.Syllabaries selectedSyllabary = Hiraganeo.Syllabaries.Hiragana;
+    private Dictionary<SyllabaryParts, bool> selectedParts = new Dictionary<SyllabaryParts, bool>();
+    private SyllabaryType selectedSyllabary = SyllabaryType.Hiragana;
 
-    public Hiraganeo.Syllabaries SelectedSyllabary 
+    public SyllabaryType SelectedSyllabary 
     {
         get { return selectedSyllabary; }
         set 
@@ -96,22 +100,24 @@
     }
 
     private void GetPracticeData()
-    {
-        (string, string) practiceText = Hiraganeo.GenerateTextWithHint(Hiraganeo.HiraganaBasic.Concat(Hiraganeo.HiraganaVoiced), selectedSyllabary);
-        PracticeText = practiceText.Item1;
-        HintText = practiceText.Item2;
+    {        
+        (PracticeText, HintText) = Generators.GeneratePracticeTextWithHint(selectedParts, selectedSyllabary);     
     }
 
-    private void ToggleHiraganaPart(Hiraganeo.HiraganaParts part, bool value)
-    {
-        Hiraganeo.EnabledSyllables[part] ^= true;
+    private void ToggleSelectedPart(SyllabaryParts part, bool value)
+    {        
+        if (selectedParts.ContainsKey(part)) {
+            selectedParts[part] = value; 
+        }
+        else {
+            selectedParts.Add(part, value);
+        }
     }
 
-    private void ToggleHiraganaParts(bool value)
+    private void ToggleSelectedParts(bool value)
     {
-        foreach (var part in (Hiraganeo.HiraganaParts[])Enum.GetValues(typeof(Hiraganeo.HiraganaParts)))
-        {
-            Hiraganeo.EnabledSyllables[part] = value;
+        foreach (var part in (SyllabaryParts[])Enum.GetValues(typeof(SyllabaryParts))) {
+            ToggleSelectedPart(part, value);
         }
     }
 }
