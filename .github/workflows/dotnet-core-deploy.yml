@@ -24,7 +24,7 @@ jobs:
     - name: Install dependencies
       run: dotnet restore
     - name: Publish
-      run: dotnet publish HiraganeoApp --configuration Release -f net50 -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -o ./publish
+      run: dotnet publish HiraganeoApp --configuration Release -f net5.0 -r linux-x64 -p:PublishSingleFile=true -p:PublishTrimmed=true --self-contained true -o ./publish
     - name: Copy files to server
       uses: appleboy/scp-action@master
       with:
