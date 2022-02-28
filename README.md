@@ -4,4 +4,4 @@
 
 Helper app for learning japanease
 
-Demo: http://hiraganeo.axonited.net
+Demo: http://hiraganeo.axonite.net
